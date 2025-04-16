@@ -1,5 +1,6 @@
-9d1e709541737e54fb2b39808eff1bb0 *DESCRIPTION
+a544213950cc6c684c91fddd78125da9 *DESCRIPTION
 aba90ac9514db28a979f4f9ab7cdca13 *NAMESPACE
+183094800820988b72e62fddcb610c51 *NEWS.md
 7d4b73d9c79416e78824479f3b362f90 *R/WeMixPV.R
 da4d57af6f595207f30ad6adacee612f *R/argchecks.R
 c076101869f2bd497a43789164a7da8e *R/center.R
@@ -8,9 +9,9 @@ e714f4a810dca56872acb8c12ac1d976 *R/internal.R
 5abb1482d43e8c4821de28bb69bfa050 *R/lmerPV.R
 68516ea40ead2ba162de4952d6ed8049 *R/repcreate.R
 31c6f9c062d92373439a4fb335047770 *R/repdata.R
-2c48877be91e23b32e2d61757eed0a5b *R/repglm.R
+915fae51f453509352ea6f795a2e182d *R/repglm.R
 c99e0161d4a8036fcf66b222dfd4eb85 *R/replm.R
-27de7189ef5ca5ea4e15c0a8c09f411e *R/repmean.R
+888440f96351979fb68a049691095447 *R/repmean.R
 cbbd16022a55025ca2c2abf4eb746499 *R/repmeandif.R
 31da2d9df9faafb8aba8a14ad075a2f3 *R/repprop.R
 efcebe89caedfbf5532081d17bb1dec3 *R/repquant.R
