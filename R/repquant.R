@@ -18,7 +18,7 @@
 repquant <- function(x,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE,
                      setup = NULL,
                      repwt, wt, df,
-                     method = c("TIMSS", "PIRLS", "ICILS", "ICCS", "PISA","TALIS"),
+                     method,
                      group = NULL,by = NULL, exclude = NULL){
 
 
@@ -33,9 +33,9 @@ repquant <- function(x,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE,
     df <- get(setup$df)
   }
 
-  frm <- formals(repquant)
+
   returnis(ischavec, method)
-  method <- returnis(isinvec,x = method[1L],choices = frm$method)
+  method <- returnis(isinvec,x = method[1L],choices = ILSAmethods(repse = TRUE))
 
 
   # Checks ----
@@ -49,6 +49,14 @@ repquant <- function(x,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE,
   returnis(ischaval,wt)
   returnis(isdf,df)
   if(!isdfonly(df)){
+
+    if(ischavec(repwt)){
+      rena = repwt
+    }else{
+      rena = NULL
+    }
+
+    df <- df[,c(x,group,wt,bys,rena)]
     df <- untidy(df)
   }
   returnisNULL(ischaval, group)
@@ -60,7 +68,7 @@ repquant <- function(x,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE,
   returnis(isnumbet,qtl,from = 0, to = 1)
 
   ## match option
-  method <- returnis(isinvec,x = method[1L],choices = frm$method)
+  method <- returnis(isinvec,x = method[1L],choices = ILSAmethods(repse = TRUE))
 
   ## Combinations
 
@@ -192,7 +200,7 @@ repquant <- function(x,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE,
 # Main function (before by)
 
 .repquant <- function(X,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE, RW,TW,
-                      method = c("TIMSS", "PIRLS", "ICILS", "ICCS", "PISA"),
+                      method,
                       GR = NULL,
                       exclude = NULL){
 
@@ -298,7 +306,7 @@ repquant <- function(x,qtl = c(0.05, 0.25, 0.75, 0.95),PV = FALSE,
 
 # Basic repquant function (no groups)
 .repquantX <- function(X,PV = FALSE,RW,TW,qtl = c(0.05, 0.25, 0.75, 0.95),
-                       method = c("TIMSS", "PIRLS", "ICILS", "ICCS", "PISA")){
+                       method){
   lqt <- length(qtl)
   TRW <- cbind(TW,RW)
 
