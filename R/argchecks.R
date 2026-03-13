@@ -41,11 +41,23 @@ if(is.null(x))
 
 ischaval <- function(x = NULL){
   if(is.null(x))
-    return("It should be a string.")
+    return("It should be a string of length 1.")
 
   is.vector(x)&&is.character(x)&&length(x)==1
 
 }
+
+
+ispath <- function(x = NULL){
+  if(is.null(x))
+    return("Path does not exist.")
+
+  all(file.exists(x))
+
+}
+
+
+
 
 isrep.mean <- function(x = NULL){
   if(is.null(x))
@@ -54,6 +66,16 @@ isrep.mean <- function(x = NULL){
   inherits(x,"repmean")
 
 }
+
+
+isrep.prop <- function(x = NULL){
+  if(is.null(x))
+    return("It should be an object produced by repprop().")
+
+  inherits(x,"repprop")
+
+}
+
 
 isrep.meansingle <- function(x = NULL){
   if(is.null(x))
@@ -122,6 +144,8 @@ isinvec <- function(x = NULL, choices){
 
 }
 
+
+
 isinvecmul <- function(x = NULL, choices){
   if(is.null(x))
     return(paste0("It should contain only the following values: ",
@@ -141,9 +165,26 @@ isinvecmul <- function(x = NULL, choices){
 
 }
 
+isinvecmulExact <- function(x = NULL, choices){
+  if(is.null(x))
+    return(paste0("It should contain only the following values: ",
+                  paste0(eval(choices),collapse = ", "),"."))
+
+  tr = lapply(1:length(x),function(y){
+    try(pmatch((x[y]),(eval(choices)),
+               nomatch = FALSE),silent = TRUE)
+  })
 
 
-returnis <- function(f, x, ...){
+  if(any(sapply(tr,function(x) inherits(x,"try-error")||x==0)))
+    return(FALSE)
+
+
+  (x)
+
+}
+
+returnisOLD <- function(f, x, ...){
 
   f <- match.fun(f)
   ev <- f(x = x, ...)
@@ -162,6 +203,36 @@ returnis <- function(f, x, ...){
 
 
 }
+
+
+returnis <- function(f, x, ...){
+
+  if(is.null(x)){
+
+    stop(paste0("\nInvalid input for '",
+                gsub("\\[1L\\]","",deparse(substitute(x))),
+                "'.\n",f(x = NULL, ...)),call. = FALSE)
+  }
+
+
+  f <- match.fun(f)
+  ev <- f(x = x, ...)
+
+  if(isFALSE(ev)){
+
+    stop(paste0("\nInvalid input for '",
+                gsub("\\[1L\\]","",deparse(substitute(x))),
+                "'.\n",f(x = NULL, ...)),call. = FALSE)
+  }
+
+  ev
+
+
+
+
+
+}
+
 
 returnisNULL <- function(f, x, ...){
 
@@ -208,6 +279,30 @@ isnumval <- function(x = NULL){
     return("It should be numeric value.")
 
   is.vector(x)&&is.numeric(x)&&length(x)==1
+
+}
+
+isval <- function(x = NULL){
+  if(is.null(x))
+    return("It should be a vector of length 1.")
+
+  is.vector(x)&&length(x)==1
+
+}
+
+
+ischaeqnum <- function(x = NULL){
+  if(is.null(x))
+    return("It should be a vector of length 1 containing a number.")
+
+  if(!(is.vector(x)&&length(x)==1))
+    return(FALSE)
+
+  if(!(as.character(sw(as.numeric(x)))%in%as.character(x)))
+    return(FALSE)
+
+  TRUE
+
 
 }
 
@@ -311,12 +406,16 @@ ILSAmethods <- function(repse = TRUE){
     c("JK2-full","JK2-half","FAY-0.5","JK2-half-1PV",
       "TIMSS","PIRLS",
       "ICILS","ICCS",
+      "CIVED","RLII",
       "PISA","TALIS",
+      "LANA",
       "oldTIMSS","oldPIRLS")
   }else{
     c("JK2-full","JK2-half","FAY-0.5","JK2-half-1PV",
       "TIMSS","PIRLS",
       "ICILS","ICCS",
+      "CIVED","RLII",
+      "LANA",
       # "PISA","TALIS",
       "oldTIMSS","oldPIRLS")
   }

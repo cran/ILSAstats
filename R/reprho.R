@@ -277,9 +277,11 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
       # wo/ groups
       out <- do.call(rbind,lapply(1:length(out),function(i){
 
-        cbind.data.frame(x[kom[1,i]],
+        outi <- cbind.data.frame(x[kom[1,i]],
                          x[kom[2,i]],
                          t(out[[i]]))
+        colnames(outi) <- paste0("V",1:ncol(outi))
+        outi
 
 
       }))
@@ -291,10 +293,24 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
 
   if(case==3){
 
-    XX <- as.matrix(X)
+    # XX <- as.matrix(X)
+    XX <- matrix(rep(X,ncol(PV)),ncol = ncol(PV))
 
-    out <- .reprhoXYG(X = XX[,1],Y = PV,RW = RW,TW = TW, method = method,
-                      rho = rho,group = GR,exclude = exclude,
+    # out <- .reprhoXYG(X = XX[,1],Y = PV,RW = RW,TW = TW, method = method,
+    #                   rho = rho,group = GR,exclude = exclude,
+    #                   aggregates = aggregates)
+    #
+
+
+    out <- .reprhoPVG(PV1 = XX,
+                      PV2 = PV,
+                      related = TRUE,
+                      RW = RW,
+                      TW = TW,
+                      method = method,
+                      rho = rho,
+                      group = GR,
+                      exclude = exclude,
                       aggregates = aggregates)
 
     # w/ groups
@@ -314,9 +330,27 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
   if(case==4){
     out <- lapply(1:ncol(X),function(i){
 
-      .reprhoXYG(X = X[,i],Y = PV,RW = RW,TW = TW, method = method,
-                 rho = rho,group = GR,exclude = exclude,
-                 aggregates = aggregates)
+      # .reprhoXYG(X = X[,i],Y = PV,RW = RW,TW = TW, method = method,
+      #            rho = rho,group = GR,exclude = exclude,
+      #            aggregates = aggregates)
+      #
+
+
+      XX <- matrix(rep(X[,i],ncol(PV)),ncol = ncol(PV))
+
+
+
+      out <- .reprhoPVG(PV1 = XX,
+                        PV2 = PV,
+                        related = TRUE,
+                        RW = RW,
+                        TW = TW,
+                        method = method,
+                        rho = rho,
+                        group = GR,
+                        exclude = exclude,
+                        aggregates = aggregates)
+
 
 
     })
@@ -353,7 +387,8 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
 
 
   if(case==5){
-    out <- .reprhoPVG(PV1 = PV, PV2 = PV2,related = relatedpvs, RW = RW,TW = TW, method = method,
+    out <- .reprhoPVG(PV1 = PV, PV2 = PV2,related = relatedpvs,
+                      RW = RW,TW = TW, method = method,rho=rho,
                       group = GR,exclude = exclude,
                       aggregates = aggregates)
 
@@ -383,6 +418,8 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
 
 .reprhoXY <- function(X,Y,RW,TW,method,rho = 'pearson'){
 
+
+
   # Y can be a matrix of PV
 
   TRW <- cbind(TW,RW)
@@ -396,7 +433,7 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
   N <- nrow(XY)
 
   if(N==0){
-    return(rep(NA,RE))
+    return(rep(NA,3))
   }
 
 
@@ -603,7 +640,7 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
 
 
     if(N==0){
-      return(rep(NA,RE))
+      return(rep(NA,3))
     }
 
     # print(i)
@@ -657,6 +694,7 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
   #          e0 = (sapply(ER,function(i) i[1])),
   #          method = method),nrow(stats::na.omit(cbind(PV1,PV2))))
 }
+
 
 
 

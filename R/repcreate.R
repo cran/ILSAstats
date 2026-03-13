@@ -16,22 +16,6 @@
 #' @param year a numeric value indicating the study year. For checking available
 #' years use
 #' \code{ILSAinfo$weights}.
-#' @param method a string indicating the name of the replication method.
-#' Available options are:
-#' \code{"JK2-full"}, \code{"JK2-half"},
-# #' \code{"FAY-0.5"},
-#' and \code{"JK2-half-1PV"}. \cr\cr
-#' Additionally, ILSA names can be used, defaulting into:
-#' \itemize{
-#' \item \code{"TIMSS"} or \code{"PIRLS"} for \code{"JK2-full"};
-#' \item \code{"ICILS"}, \code{"ICCS"}, or \code{"CIVED"} for \code{"JK2-half"};
-# #' \item \code{"PISA"} or \code{"TALIS"} for \code{"FAY-0.5"};
-#' and \code{"oldTIMSS"} or \code{"oldPIRLS"} for \code{"JK2-half-1PV"}.
-#' }
-#' Note that \code{"oldTIMSS"} and \code{"oldPIRLS"}
-#' refer to the method used for TIMSS and PIRLS before 2015,
-#' where within imputation variance
-#' is estimated using only 1 plausible value.
 #'
 #' @return a data frame.
 #'
@@ -41,21 +25,12 @@
 #'
 
 repcreate <- function(df,
-                      wt,
-                      jkzone,
-                      jkrep,
-                      repwtname = "RWT",
-                      reps = NULL,
-                      method){
-#
-#   if(!is.null(setup)){
-#     if(setup$repwt.type!="df"){repwt <- setup$repwt}else{repwt <- get(setup$repwt)}
-#     wt <- setup$wt
-#     method <- setup$method
-#     # group <- setup$group
-#     # exclude <- setup$exclude
-#     df <- get(setup$df)
-#   }
+                       wt,
+                       jkzone,
+                       jkrep,
+                       repwtname = "RWT",
+                       reps = NULL,
+                       method){
 
 
   returnis(ischavec, method)
@@ -121,37 +96,202 @@ repcreate <- function(df,
   if(min(wt%in%names(df))==0)
     stop('wt not in data frame.')
 
-  ## method
-  # if(!(is.character(method)&length(method)==1&is.atomic(method)))
-  #   stop('Invalid input for method.')
-  #
-  # if(min(method%in%c('TIMSS','PIRLS','ICILS','ICCS',"oldTIMSS","oldPIRLS"))==0)
-  #   stop('Invalid input for method')
-
-  # methf <- method[1]
-
-  # ## method
-  # if(!(is.character(method)&length(method)==1&is.atomic(method)))
-  #   stop('Invalid input for method.')
-  #
-  # if(!'JK2'%in%method)
-  #   stop('Invalid input for method.')
-  #
-  # ## simple
-  # if(!islova(simple))
-  #   stop('Invalid input for simple')
 
 
   method <- tolower(method)
 
   # Process ----
 
-  if(method%in%c("jk2-full",'timss','pirls')){
+  if(method%in%c("jk2-full",'timss','pirls','lana')){
     simple <- FALSE
   }
 
   if(method%in%c("jk2-half","jk2-half-1pv",
-                 'icils','iccs',"cived",
+                 'icils','iccs',"cived","rlii",
+                 "oldtimss","oldpirls")){
+    simple <- TRUE
+  }
+
+
+
+  RWT <- matrix(df[,wt],ncol = reps,nrow = nrow(df))
+  MM <- matrix(1,ncol = reps,nrow = nrow(df))
+  # JKZ <- matrix(df[,jkzone],ncol = reps,nrow = nrow(df))
+  # JKR <- matrix(df[,jkrep],ncol = reps,nrow = nrow(df))
+  # JKi <- matrix(1:reps,nrow = nrow(df),ncol = reps,byrow = T)
+
+  # isjkzi <- (JKZ==JKi)
+
+  isjkzi = matrix(rep(df[,jkzone],each=reps)==rep(1:reps,nrow(df)),nrow = nrow(df),byrow = TRUE)
+
+  # table(c(aa==isjkzi))
+
+  # MM[isjkzi&(JKR==0)] <- 0
+  # MM[isjkzi&(JKR==1)] <- 2
+  # rm(JKZ,JKi,JKR)
+
+  MM[(isjkzi*(df[,jkrep]==0))==1] <- 0
+  MM[(isjkzi*(df[,jkrep]==1))==1] <- 2
+
+
+
+  # for(i in 1:reps){
+  #   RWT1[df[,jkzone]==i&df[,jkrep]%in%0,i] <- RWT1[df[,jkzone]==i&df[,jkrep]%in%0,i]*0
+  #   RWT1[df[,jkzone]==i&df[,jkrep]%in%1,i] <- RWT1[df[,jkzone]==i&df[,jkrep]%in%1,i]*2
+  # }
+  if(!simple){
+
+    # for(i in 1:reps){
+
+    # MM[(JKZ==JKi)&(JKR==0)] <- 2
+    # MM[(JKZ==JKi)&(JKR==1)] <- 0
+
+    # RWT2[df[,jkzone]==i&df[,jkrep]%in%0,i] <- RWT2[df[,jkzone]==i&df[,jkrep]%in%0,i]*2
+    # RWT2[df[,jkzone]==i&df[,jkrep]%in%1,i] <- RWT2[df[,jkzone]==i&df[,jkrep]%in%1,i]*0
+    # }
+    RWT <- cbind.data.frame(cbind(RWT,RWT)*cbind(MM,abs(MM-2)))
+  }else{
+    RWT <- as.data.frame(RWT*MM)
+  }
+  colnames(RWT) <- paste0(repwtname,1:ncol(RWT))
+
+  RWT
+}
+
+
+
+#' @rdname repcreate
+#' @export
+repcreateILSA <- function(study,
+                          year,
+                          df,
+                          repwtname = "RWT"){
+
+
+  # Checks ----
+  # returnis(isval,year);year <- as.numeric(year)
+  returnis(ischaval,study)
+  # returnis(isnumval,year)
+  returnis(ischaeqnum,year)
+
+
+  # Process ----
+
+
+  x <- ILSAstats::ILSAinfo$weights
+  x <- x[(tolower(x$study)%in%tolower(study))&((x$year)%in%(year)),]
+  x <- unique(x[,!colnames(x)%in%"study2"])
+
+  if(nrow(x)!=1){
+    stop("\nCombination of study and year not available.\nCheck available studies using ILSAinfo$weights.")
+  }
+
+  repcreate(df = df,
+            repwtname = repwtname,
+            wt = x$totalweight,
+            jkzone = x$jkzones,
+            jkrep = x$jkreps,
+            method = x$method,
+            reps = x$reps)
+
+
+}
+
+
+
+repcreateOLD <- function(df,
+                      wt,
+                      jkzone,
+                      jkrep,
+                      repwtname = "RWT",
+                      reps = NULL,
+                      method){
+  #
+  #   if(!is.null(setup)){
+  #     if(setup$repwt.type!="df"){repwt <- setup$repwt}else{repwt <- get(setup$repwt)}
+  #     wt <- setup$wt
+  #     method <- setup$method
+  #     # group <- setup$group
+  #     # exclude <- setup$exclude
+  #     df <- get(setup$df)
+  #   }
+
+
+  returnis(ischavec, method)
+  method <- returnis(isinvec,x = method[1L],choices = ILSAmethods(repse = FALSE))
+
+
+  # source("R/argchecks.R")
+  # source("R/internal.R")
+
+  # Check arguments ----
+
+  ## df
+  if(!is.data.frame(df))
+    stop('df is not a data frame.')
+
+  if(!isdfonly(df)){
+
+
+    df <- df[,c(wt,jkrep,jkzone)]
+    df <- untidy(df)
+  }
+
+
+
+  ## jkzone
+  if(!is.character(jkzone))
+    stop('jkzone is not a character vector.')
+  if(!(length(jkzone)==1&is.atomic(jkzone)))
+    stop('Invalid input for jkzone')
+  if(min(jkzone%in%names(df))==0)
+    stop('jkzone not in data frame.')
+
+  if(is.null(reps)){
+    reps <- max(df[,jkzone],na.rm = TRUE)
+  }
+
+  ## reps
+  if(!(is.numeric(reps)&is.atomic(reps)&length(reps)==1))
+    stop('Invalid input for reps.')
+
+
+  ## repwtname
+  if(!is.character(repwtname))
+    stop('repwtname is not a character vector.')
+  if(!(length(repwtname)==1&is.atomic(repwtname)))
+    stop('Invalid input for repwtname')
+
+  ## jkrep
+  if(!is.character(jkrep))
+    stop('jkrep is not a character vector.')
+  if(!(length(jkrep)==1&is.atomic(jkrep)))
+    stop('Invalid input for jkrep')
+  if(min(jkrep%in%names(df))==0)
+    stop('jkrep not in data frame.')
+
+
+
+  ## wt
+  if(!is.character(wt))
+    stop('wt is not a character vector.')
+  if(!(length(wt)==1&is.atomic(wt)))
+    stop('Invalid input for wt')
+  if(min(wt%in%names(df))==0)
+    stop('wt not in data frame.')
+
+
+
+  method <- tolower(method)
+
+  # Process ----
+
+  if(method%in%c("jk2-full",'timss','pirls','lana')){
+    simple <- FALSE
+  }
+
+  if(method%in%c("jk2-half","jk2-half-1pv",
+                 'icils','iccs',"cived","rlii",
                  "oldtimss","oldpirls")){
     simple <- TRUE
   }
@@ -177,44 +317,5 @@ repcreate <- function(df,
 
   RWT
 }
-
-
-#' @rdname repcreate
-#' @export
-repcreateILSA <- function(study,
-                          year,
-                          df,
-                          repwtname = "RWT"){
-
-
-  # Checks ----
-  returnis(ischaval,study)
-  returnis(isnumval,year)
-
-
-  # Process ----
-
-
-  x <- ILSAstats::ILSAinfo$weights
-  x <- x[(tolower(x$study)%in%tolower(study))&((x$year)%in%(year)),]
-
-  if(nrow(x)!=1){
-    stop("\nCombination of study and year not available.\nCheck available studies using ILSAinfo$weights.")
-  }
-
-  repcreate(df = df,
-            repwtname = repwtname,
-            wt = x$totalweight,
-            jkzone = x$jkzones,
-            jkrep = x$jkreps,
-            method = x$method,
-            reps = x$reps)
-
-
-}
-
-
-
-
 
 

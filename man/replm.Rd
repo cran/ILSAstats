@@ -17,7 +17,8 @@ replm(
   group = NULL,
   exclude = NULL,
   na.action = getOption("na.action"),
-  method
+  method,
+  aggregates = c("pooled", "composite")
 )
 }
 \arguments{
@@ -74,15 +75,19 @@ Available options are:
 and \code{"JK2-half-1PV"}. \cr\cr
 Additionally, ILSA names can be used, defaulting into:
 \itemize{
-\item \code{"TIMSS"} or \code{"PIRLS"} for \code{"JK2-full"};
+\item \code{"TIMSS"},  \code{"PIRLS"}, or \code{"LANA"} for \code{"JK2-full"};
 \item \code{"ICILS"}, \code{"ICCS"}, or \code{"CIVED"} for \code{"JK2-half"};
 \item \code{"PISA"} or \code{"TALIS"} for \code{"FAY-0.5"};
-\item and \code{"oldTIMSS"} or \code{"oldPIRLS"} for \code{"JK2-half-1PV"}.
+\item and \code{"oldTIMSS"}, \code{"oldPIRLS"}, or \code{"RLII"} for \code{"JK2-half-1PV"}.
 }
 Note that \code{"oldTIMSS"} and \code{"oldPIRLS"}
 refer to the method used for TIMSS and PIRLS before 2015,
 where within imputation variance
 is estimated using only 1 plausible value.}
+
+\item{aggregates}{a string vector indicating which aggregates should be
+included, options are \code{"pooled"} and \code{"composite"}, both options can be
+used at the same time. If \code{NULL} no aggregate will be estimated.}
 }
 \value{
 a list.

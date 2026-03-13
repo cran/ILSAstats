@@ -81,8 +81,10 @@ repsetupILSA <- function(study,
 
 
   # Checks ----
+  # returnis(isval,year);year <- as.numeric(year)
   returnis(ischaval,study)
-  returnis(isnumval,year)
+  # returnis(isnumval,year)
+  returnis(ischaeqnum,year)
 
 
   # Process ----
@@ -90,6 +92,7 @@ repsetupILSA <- function(study,
 
   x <- ILSAstats::ILSAinfo$weights
   x <- x[(tolower(x$study)%in%tolower(study))&((x$year)%in%(year)),]
+  x <- unique(x[,!colnames(x)%in%"study2"])
 
   if(nrow(x)!=1){
     stop("\nCombination of study and year not available.\nCheck available studies using ILSAinfo$weights.")

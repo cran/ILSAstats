@@ -1,3 +1,22 @@
+# ILSAstats 0.4.4
+- Added support for LaNA.
+- Added `repmeanCI()`.
+- Added `prepdata()`.
+- `untidy()` converts missings to NAs.
+- Argument `year` now accepts characters.
+- Improved efficiency of `repcreate()`.
+- Added `proflevels()`.
+- Added `proflevels.get()`.
+- Added `repprop.table()`.
+- Added argument `aggregates` to `replm()`, and `repprop()`.
+- Added `leaguetables()`.
+- Fixed a bug in `repquant()`when using tibbles.
+- Fixed a bug in `repmean()` when `by` and `aggregates = NULL`.
+- Added `RLII` as method.
+- Fixed `CIVED` as method.
+- Function `myfunc()` deleted. This function was added my mistake in 0.4.0.
+
+
 # ILSAstats 0.4.0
 - Added `ILSAinfo()` with ILSA information, and pre-setups  with `repcreateILSA()` and `setupILSA()`.
 - Added support for CIVED, TIMSS and PIRLS pre 2015.

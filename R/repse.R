@@ -20,10 +20,10 @@
 #' and \code{"JK2-half-1PV"}. \cr\cr
 #' Additionally, ILSA names can be used, defaulting into:
 #' \itemize{
-#' \item \code{"TIMSS"} or \code{"PIRLS"} for \code{"JK2-full"};
+#' \item \code{"TIMSS"},  \code{"PIRLS"}, or \code{"LANA"} for \code{"JK2-full"};
 #' \item \code{"ICILS"}, \code{"ICCS"}, or \code{"CIVED"} for \code{"JK2-half"};
 #' \item \code{"PISA"} or \code{"TALIS"} for \code{"FAY-0.5"};
-#' \item and \code{"oldTIMSS"} or \code{"oldPIRLS"} for \code{"JK2-half-1PV"}.
+#' \item and \code{"oldTIMSS"}, \code{"oldPIRLS"}, or \code{"RLII"} for \code{"JK2-half-1PV"}.
 #' }
 #' Note that \code{"oldTIMSS"} and \code{"oldPIRLS"}
 #' refer to the method used for TIMSS and PIRLS before 2015,
@@ -198,11 +198,11 @@ repse <- function(er,e0,
   method <- tolower(method)
 
 
-  if(method%in%c("jk2-full",'timss','pirls')){
+  if(method%in%c("jk2-full",'timss','pirls','lana')){
     mod <- 2
   }
 
-  if(method%in%c("jk2-half","jk2-half-1pv",'icils','iccs',"cived","oldtimss","oldpirls")){
+  if(method%in%c("jk2-half","jk2-half-1pv",'icils','iccs',"cived","rlii","oldtimss","oldpirls")){
     mod <- 1
   }
 
@@ -220,7 +220,7 @@ repse <- function(er,e0,
 
   ebar <- sum(e0)/P
 
-  if(method%in%c("jk2-half-1pv","oldtimss","oldpirls")){
+  if(method%in%c("jk2-half-1pv","oldtimss","oldpirls","rlii")){
     t1 <- sum(sapply(1:1,function(x){
       sum((er[[x]]-e0[x])**2)/mod
     }))
@@ -297,11 +297,11 @@ repsecomp <- function(se){
   method <- tolower(method)
 
 
-  if(method%in%c("jk2-full",'timss','pirls')){
+  if(method%in%c("jk2-full",'timss','pirls','lana')){
     mod <- 2
   }
 
-  if(method%in%c("jk2-half","jk2-half-1pv",'icils','iccs',"oldtimss","oldpirls")){
+  if(method%in%c("jk2-half","jk2-half-1pv",'icils','iccs',"oldtimss","oldpirls","cived","rlii")){
     mod <- 1
   }
 
@@ -320,7 +320,7 @@ repsecomp <- function(se){
 
   ebar <- sum(e0)/P
 
-  if(method%in%c("jk2-half-1pv","oldtimss","oldpirls")){
+  if(method%in%c("jk2-half-1pv","oldtimss","oldpirls","rlii")){
     t1 <- sum(sapply(1:1,function(x){
       sum((er[[x]]-e0[x])**2)/mod
     }))
