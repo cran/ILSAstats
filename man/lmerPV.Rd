@@ -14,6 +14,7 @@ lmerPV(
   groupmean = NULL,
   group = NULL,
   nullmodel = FALSE,
+  barnardrubin = TRUE,
   ...
 )
 }
@@ -76,6 +77,9 @@ used for grouping. Categories in \code{group} are treated as independent, e.g.,
 countries.}
 
 \item{nullmodel}{a logical value indicating if the null model should also be estimated.}
+
+\item{barnardrubin}{a logical value indicating if Barnard & Rubin adjustment
+should be used for estimating the degrees of freedom. Default is \code{TRUE}.}
 
 \item{...}{
   Arguments passed on to \code{\link[lme4:lmer]{lme4::lmer}}

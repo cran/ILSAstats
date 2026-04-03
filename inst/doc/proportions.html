@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Proportions</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Proportions</h1>
+
+
+
+<p>We can estimate the proportions of the categories of any variable
+using the function <code>repprop()</code>, as any other “rep” function
+of <code>ILSAstats</code>, we need to specify the data
+(<code>df</code>), the total weights (<code>wt</code>), the replicate
+weights (<code>repwt</code>), and the method (<code>method</code>).</p>
+<p>Besides these basic options, other arguments can be used:</p>
+<ul>
+<li><code>x</code>: a string with the name of the variable (or
+variables) to be used in the analysis. If multiple variables are
+specified, they will be treated as plausible values.</li>
+<li><code>group</code>: a string containing the name of the variable
+that contains the groups of countries. If used all statistics will be
+estimated separately for each group.</li>
+<li><code>exclude</code>: a string containing which groups should be
+excluded from aggregate estimations.</li>
+<li><code>aggregates</code>: a string containing the aggregate
+statistics that should be estimated. Options include:
+<code>&quot;pooled&quot;</code> for also estimating all groups (without
+exclusions) as a single group; and <code>&quot;composite&quot;</code> for
+averaging all the estimations for each single group (without
+exclusions).</li>
+</ul>
+<div id="weights-and-setup" class="section level2">
+<h2>Weights and setup</h2>
+<p>For <code>repprop()</code>, first we need to create the replicate
+weights. Using the included <code>repdata</code> data, and using the
+<code>&quot;LANA&quot;</code> method:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>RW <span class="ot">&lt;-</span> <span class="fu">repcreate</span>(<span class="at">df =</span> repdata,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                 <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                 <span class="at">jkzone =</span> <span class="st">&quot;jkzones&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                 <span class="at">jkrep =</span> <span class="st">&quot;jkrep&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>)</span></code></pre></div>
+<p>To make it easier to specify some arguments, it is advised that we
+create also a <code>&quot;repsetup&quot;</code> object. We will create three
+setups for this example: one without groups, one with groups and without
+exclusions, and one with groups and exclusions (excluding group 2):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># No groups</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>STNG <span class="ot">&lt;-</span> <span class="fu">repsetup</span>(<span class="at">repwt =</span> RW, <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>, <span class="at">df =</span> repdata, <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># With groups</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>STGR <span class="ot">&lt;-</span> <span class="fu">repsetup</span>(<span class="at">repwt =</span> RW, <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>, <span class="at">df =</span> repdata, <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>                 <span class="at">group =</span> <span class="st">&quot;GROUP&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># With groups and exclusions</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>STGE <span class="ot">&lt;-</span> <span class="fu">repsetup</span>(<span class="at">repwt =</span> RW, <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>, <span class="at">df =</span> repdata, <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>                 <span class="at">group =</span> <span class="st">&quot;GROUP&quot;</span>, <span class="at">exclude =</span> <span class="st">&quot;GR2&quot;</span>)</span></code></pre></div>
+</div>
+<div id="single-variable" class="section level2">
+<h2>Single variable</h2>
+<p>For example, if we want to estimate the proportions of each category
+of variable <code>&quot;GENDER&quot;</code>, we can use either of the setups to
+get the overall or group results:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># No groups</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="st">&quot;GENDER&quot;</span>, <span class="at">setup =</span> STNG)</span></code></pre></div>
+<pre><code>## $`GENDER==0`
+##      N    prop      se  prop_1 propdiff_1 propdiffse_1 tvalue_1
+## 1 2483 0.49535 0.00773 0.50465   -0.00929      0.01546  -0.6012
+## 
+## $`GENDER==1`
+##      N    prop      se  prop_0 propdiff_0 propdiffse_0 tvalue_0
+## 1 2517 0.50465 0.00773 0.49535    0.00929      0.01546   0.6012</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># With groups</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="st">&quot;GENDER&quot;</span>, <span class="at">setup =</span> STGR)</span></code></pre></div>
+<pre><code>## $`GENDER==0`
+##       group    N    prop      se  prop_1 propdiff_1 propdiffse_1 tvalue_1
+## 1    Pooled 2483 0.49535 0.00773 0.50465   -0.00929      0.01546 -0.60120
+## 2 Composite   NA 0.49533 0.00774 0.50467   -0.00933      0.01548 -0.60308
+## 3       GR1  819 0.48976 0.01298 0.51024   -0.02048      0.02596 -0.78907
+## 4       GR2  846 0.50590 0.01248 0.49410    0.01180      0.02496  0.47286
+## 5       GR3  818 0.49034 0.01465 0.50966   -0.01932      0.02931 -0.65928
+## 
+## $`GENDER==1`
+##       group    N    prop      se  prop_0 propdiff_0 propdiffse_0 tvalue_0
+## 1    Pooled 2517 0.50465 0.00773 0.49535    0.00929      0.01546  0.60120
+## 2 Composite   NA 0.50467 0.00774 0.49533    0.00933      0.01548  0.60308
+## 3       GR1  848 0.51024 0.01298 0.48976    0.02048      0.02596  0.78907
+## 4       GR2  820 0.49410 0.01248 0.50590   -0.01180      0.02496 -0.47286
+## 5       GR3  849 0.50966 0.01465 0.49034    0.01932      0.02931  0.65928</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># With groups and exclusions</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="st">&quot;GENDER&quot;</span>, <span class="at">setup =</span> STGE)</span></code></pre></div>
+<pre><code>## $`GENDER==0`
+##       group    N    prop      se  prop_1 propdiff_1 propdiffse_1 tvalue_1
+## 1    Pooled 1637 0.49005 0.01071 0.50995   -0.01990      0.02143 -0.92882
+## 2 Composite   NA 0.49005 0.00979 0.50995   -0.01990      0.01957 -1.01671
+## 3       GR1  819 0.48976 0.01298 0.51024   -0.02048      0.02596 -0.78907
+## 4       GR2  846 0.50590 0.01248 0.49410    0.01180      0.02496  0.47286
+## 5       GR3  818 0.49034 0.01465 0.50966   -0.01932      0.02931 -0.65928
+## 
+## $`GENDER==1`
+##       group    N    prop      se  prop_0 propdiff_0 propdiffse_0 tvalue_0
+## 1    Pooled 1697 0.50995 0.01071 0.49005    0.01990      0.02143  0.92882
+## 2 Composite   NA 0.50995 0.00979 0.49005    0.01990      0.01957  1.01671
+## 3       GR1  848 0.51024 0.01298 0.48976    0.02048      0.02596  0.78907
+## 4       GR2  820 0.49410 0.01248 0.50590   -0.01180      0.02496 -0.47286
+## 5       GR3  849 0.50966 0.01465 0.49034    0.01932      0.02931  0.65928</code></pre>
+<p>We can notice that using no groups we would get the same results for
+the pooled estimates if we use groups and no exclusions. But, when we
+exclude group 2, the pooled and the composite estimate changes.</p>
+</div>
+<div id="proportion-table" class="section level2">
+<h2>Proportion table</h2>
+<p>By default, <code>repprop()</code> will provide a list where each
+element corresponds to the statistics of each category. Nevertheless, we
+can summarize these results into a single data frame using
+<code>repprop.table()</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">repprop</span>(<span class="at">x =</span> <span class="st">&quot;GENDER&quot;</span>, <span class="at">setup =</span> STGR)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">x =</span> p1)</span></code></pre></div>
+<pre><code>##        group category    prop      se
+## 1     Pooled        0 0.49535 0.00773
+## 2  Composite        0 0.49533 0.00774
+## 3        GR1        0 0.48976 0.01298
+## 4        GR2        0 0.50590 0.01248
+## 5        GR3        0 0.49034 0.01465
+## 6     Pooled        1 0.50465 0.00773
+## 7  Composite        1 0.50467 0.00774
+## 8        GR1        1 0.51024 0.01298
+## 9        GR2        1 0.49410 0.01248
+## 10       GR3        1 0.50966 0.01465</code></pre>
+<p>By default, <code>repprop.table()</code> will provide a long table,
+but we can also get wide tables were groups are separated by columns or
+by rows, and combined or not the proportion estimates with the standard
+errors:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Groups by rows, separate SE</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">x =</span> p1, <span class="at">type =</span> <span class="st">&quot;wide1&quot;</span>)</span></code></pre></div>
+<pre><code>## $prop
+##       group  prop.0  prop.1
+## 1    Pooled 0.49535 0.50465
+## 2 Composite 0.49533 0.50467
+## 3       GR1 0.48976 0.51024
+## 4       GR2 0.50590 0.49410
+## 5       GR3 0.49034 0.50966
+## 
+## $se
+##       group    se.0    se.1
+## 1    Pooled 0.00773 0.00773
+## 2 Composite 0.00774 0.00774
+## 3       GR1 0.01298 0.01298
+## 4       GR2 0.01248 0.01248
+## 5       GR3 0.01465 0.01465</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Groups by rows, non-separate SE</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">x =</span> p1, <span class="at">type =</span> <span class="st">&quot;wide1&quot;</span>, <span class="at">separateSE =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>##       group  prop.0    se.0  prop.1    se.1
+## 1    Pooled 0.49535 0.00773 0.50465 0.00773
+## 2 Composite 0.49533 0.00774 0.50467 0.00774
+## 3       GR1 0.48976 0.01298 0.51024 0.01298
+## 4       GR2 0.50590 0.01248 0.49410 0.01248
+## 5       GR3 0.49034 0.01465 0.50966 0.01465</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Groups by columns, separate SE</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">x =</span> p1, <span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>)</span></code></pre></div>
+<pre><code>## $prop
+##   category    Pooled Composite       GR1       GR2       GR3
+## 1        0 0.4953532 0.4953333 0.4897593 0.5059013 0.4903392
+## 3        1 0.5046468 0.5046667 0.5102407 0.4940987 0.5096608
+## 
+## $se
+##   category      Pooled   Composite        GR1        GR2        GR3
+## 2        0 0.007729275 0.007738154 0.01297812 0.01248006 0.01465359
+## 4        1 0.007729275 0.007738154 0.01297812 0.01248006 0.01465359</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Groups by columns, non-separate SE</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">x =</span> p1, <span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>, <span class="at">separateSE =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>##   category statistic      Pooled   Composite        GR1        GR2        GR3
+## 1        0      prop 0.495353153 0.495333268 0.48975930 0.50590131 0.49033920
+## 2        0        se 0.007729275 0.007738154 0.01297812 0.01248006 0.01465359
+## 3        1      prop 0.504646847 0.504666732 0.51024070 0.49409869 0.50966080
+## 4        1        se 0.007729275 0.007738154 0.01297812 0.01248006 0.01465359</code></pre>
+</div>
+<div id="plausible-values" class="section level2">
+<h2>Plausible values</h2>
+<p>When treating with plausible values, we need to specify the names of
+all plausible values of a construct, so all estimates will be combined.
+For example, for estimating the proportions of each proficiency level in
+math we would use:</p>
+<p>mean achievement in math for this sample we would use:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># No groups</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">&quot;CatMath&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">setup =</span> STNG)<span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>)</span></code></pre></div>
+<pre><code>## More than one variable provided. &#39;x&#39; treated as PVs.</code></pre>
+<pre><code>## $prop
+##   category    Pooled
+## 1        1 0.1604335
+## 3        2 0.3388836
+## 5        3 0.3343512
+## 7        4 0.1663317
+## 
+## $se
+##   category      Pooled
+## 2        1 0.008401597
+## 4        2 0.009643329
+## 6        3 0.010323985
+## 8        4 0.006739155</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># With groups</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">&quot;CatMath&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">setup =</span> STGR)<span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>)</span></code></pre></div>
+<pre><code>## More than one variable provided. &#39;x&#39; treated as PVs.</code></pre>
+<pre><code>## $prop
+##   category    Pooled Composite        GR1       GR2        GR3
+## 1        1 0.1604335 0.1605950 0.31764327 0.1230013 0.04114025
+## 3        2 0.3388836 0.3388807 0.42791017 0.3791503 0.20958161
+## 5        3 0.3343512 0.3342311 0.21615471 0.3616510 0.42488755
+## 7        4 0.1663317 0.1662933 0.03829185 0.1361973 0.32439059
+## 
+## $se
+##   category      Pooled   Composite         GR1        GR2        GR3
+## 2        1 0.008401597 0.008045957 0.020893302 0.01068229 0.00565645
+## 4        2 0.009643329 0.009302842 0.016750950 0.01374063 0.01759223
+## 6        3 0.010323985 0.010593748 0.015851628 0.02033506 0.01858114
+## 8        4 0.006739155 0.008037791 0.006531979 0.01193100 0.01991078</code></pre>
+</div>
+<div id="aggregates" class="section level2">
+<h2>Aggregates</h2>
+<p>When using groups we can always omit the pooled and composite
+calculations if we need to, by default both estimates will be
+calculated.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="co"># Default</span></span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">&quot;CatMath&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">setup =</span> STGR)<span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>,<span class="at">separateSE =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## More than one variable provided. &#39;x&#39; treated as PVs.</code></pre>
+<pre><code>##   category statistic      Pooled   Composite         GR1        GR2        GR3
+## 1        1      prop 0.160433532 0.160594953 0.317643271 0.12300134 0.04114025
+## 2        1        se 0.008401597 0.008045957 0.020893302 0.01068229 0.00565645
+## 3        2      prop 0.338883595 0.338880700 0.427910174 0.37915032 0.20958161
+## 4        2        se 0.009643329 0.009302842 0.016750950 0.01374063 0.01759223
+## 5        3      prop 0.334351157 0.334231088 0.216154706 0.36165101 0.42488755
+## 6        3        se 0.010323985 0.010593748 0.015851628 0.02033506 0.01858114
+## 7        4      prop 0.166331717 0.166293259 0.038291849 0.13619733 0.32439059
+## 8        4        se 0.006739155 0.008037791 0.006531979 0.01193100 0.01991078</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># Only pooled</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">&quot;CatMath&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">setup =</span> STGR, <span class="at">aggregates =</span> <span class="st">&quot;pooled&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>,<span class="at">separateSE =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## More than one variable provided. &#39;x&#39; treated as PVs.</code></pre>
+<pre><code>##   category statistic      Pooled         GR1        GR2        GR3
+## 1        1      prop 0.160433532 0.317643271 0.12300134 0.04114025
+## 2        1        se 0.008401597 0.020893302 0.01068229 0.00565645
+## 3        2      prop 0.338883595 0.427910174 0.37915032 0.20958161
+## 4        2        se 0.009643329 0.016750950 0.01374063 0.01759223
+## 5        3      prop 0.334351157 0.216154706 0.36165101 0.42488755
+## 6        3        se 0.010323985 0.015851628 0.02033506 0.01858114
+## 7        4      prop 0.166331717 0.038291849 0.13619733 0.32439059
+## 8        4        se 0.006739155 0.006531979 0.01193100 0.01991078</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># Only composite</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">&quot;CatMath&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">setup =</span> STGR, <span class="at">aggregates =</span> <span class="st">&quot;composite&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>,<span class="at">separateSE =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## More than one variable provided. &#39;x&#39; treated as PVs.</code></pre>
+<pre><code>##   category statistic   Composite         GR1        GR2        GR3
+## 1        1      prop 0.160594953 0.317643271 0.12300134 0.04114025
+## 2        1        se 0.008045957 0.020893302 0.01068229 0.00565645
+## 3        2      prop 0.338880700 0.427910174 0.37915032 0.20958161
+## 4        2        se 0.009302842 0.016750950 0.01374063 0.01759223
+## 5        3      prop 0.334231088 0.216154706 0.36165101 0.42488755
+## 6        3        se 0.010593748 0.015851628 0.02033506 0.01858114
+## 7        4      prop 0.166293259 0.038291849 0.13619733 0.32439059
+## 8        4        se 0.008037791 0.006531979 0.01193100 0.01991078</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="co"># No aggregates</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="fu">repprop</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">&quot;CatMath&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">setup =</span> STGR, <span class="at">aggregates =</span> <span class="cn">NULL</span>)<span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a><span class="fu">repprop.table</span>(<span class="at">type =</span> <span class="st">&quot;wide2&quot;</span>,<span class="at">separateSE =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## More than one variable provided. &#39;x&#39; treated as PVs.</code></pre>
+<pre><code>##   category statistic         GR1        GR2        GR3
+## 1        1      prop 0.317643271 0.12300134 0.04114025
+## 2        1        se 0.020893302 0.01068229 0.00565645
+## 3        2      prop 0.427910174 0.37915032 0.20958161
+## 4        2        se 0.016750950 0.01374063 0.01759223
+## 5        3      prop 0.216154706 0.36165101 0.42488755
+## 6        3        se 0.015851628 0.02033506 0.01858114
+## 7        4      prop 0.038291849 0.13619733 0.32439059
+## 8        4        se 0.006531979 0.01193100 0.01991078</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -13,20 +13,22 @@ proflevels(
   reps = NULL,
   type = c("long", "wide1", "wide2"),
   separateSE = TRUE,
-  fixN = TRUE
+  fixN = TRUE,
+  accumulated = FALSE
 )
 }
 \arguments{
 \item{df}{a data frame.}
 
-\item{study}{an optional character vector indicating the subjects to be analyzed, for a list of available
-subjects, check \code{\link{ILSAinfo}}.}
+\item{study}{an optional character vector indicating the ILSA name, for a list of available
+ILSA, check \code{\link{autoILSA}}. If \code{NULL}, the ILSA name will be determined
+by the column names in the data frame.}
 
 \item{year}{a numeric vector indicating the ILSA name, for a list of available
-cycles, check \code{\link{ILSAinfo}}.}
+cycles, check \code{\link{autoILSA}}.}
 
 \item{subject}{an optional character vector indicating the subject for a list of available
-ILSA, check \code{\link{ILSAinfo}}.}
+ILSA, check \code{\link{autoILSA}}.}
 
 \item{method}{a string indicating the name of the replication method.
 Available options are:
@@ -58,6 +60,8 @@ proportions, each as an element from a list. Only works for wide tables. Default
 
 \item{fixN}{a logical value indicating if data should be "fixed" to meet official criteria.
 For example, reducing the sample for certain countries in TIMSS 1995. Default is \code{TRUE}.}
+
+\item{accumulated}{a logical value indicating if proficiency levels should be accumulated.}
 }
 \value{
 a data frame or a list.
@@ -65,7 +69,7 @@ a data frame or a list.
 \description{
 Estimates the proficiency levels for all countries within a cycle of an ILSA.
 Arguments \code{method}, and \code{reps}, are extracted from
-\code{\link{ILSAinfo}} and can be overridden by the user.
+\code{\link{autoILSA}} and can be overridden by the user.
 }
 \examples{
 data(timss99)

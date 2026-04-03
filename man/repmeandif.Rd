@@ -7,7 +7,8 @@
 repmeandif(x)
 }
 \arguments{
-\item{x}{a data frame produced by \code{\link{repmean}} for a single variable.}
+\item{x}{a data frame produced by \code{\link{repmean}} for a single variable
+or an object produced by \code{\link{leaguetable}}.}
 }
 \value{
 a data frame or a list.
@@ -34,7 +35,7 @@ RW <- repcreate(df = repdata, # the data frame with all the information
 reme <- repmean(x = c("item01"),
                 PV = FALSE,
                 repwt = RW, wt = "wt", df = repdata,
-                method = "ICILS",var = "ML",zones = "jkzones",
+                method = "ICILS",var = "ML",
                 group = "GROUP",
                 exclude = "GR2") # GR2 will not be used for Pooled nor Composite
 
@@ -45,7 +46,7 @@ repmeandif(reme)
 reme <- repmean(x = paste0("Math",1:5),
                 PV = TRUE, # if set to TRUE, PVs will be treated as separate variables
                 repwt = RW, wt = "wt", df = repdata,
-                method = "ICILS",var = "ML",zones = "jkzones",
+                method = "ICILS",var = "ML",
                 group = "GROUP",
                 exclude = "GR2") # GR2 will not be used for Pooled nor Composite
 
@@ -57,7 +58,7 @@ repmeandif(reme)
 reme <- repmean(x = c("item01"),
                 PV = FALSE,
                 repwt = RW, wt = "wt", df = repdata,
-                method = "ICILS",var = "ML",zones = "jkzones",
+                method = "ICILS",var = "ML",
                 group = "GROUP",
                 by = "GENDER", # results will be separated by GENDER
                 exclude = "GR2") # GR2 will not be used for Pooled nor Composite
@@ -68,7 +69,7 @@ repmeandif(reme)
 reme <- repmean(x = paste0("Math",1:5),
                 PV = TRUE, # if set to TRUE, PVs will be treated as separate variables
                 repwt = RW, wt = "wt", df = repdata,
-                method = "ICILS",var = "ML",zones = "jkzones",
+                method = "ICILS",var = "ML",
                 group = "GROUP",
                 by = "GENDER", # results will be separated by GENDER
                 exclude = "GR2") # GR2 will not be used for Pooled nor Composite

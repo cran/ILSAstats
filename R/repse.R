@@ -36,6 +36,10 @@
 #' plausible value.
 #' @param PVe0 a numeric vector containing the point estimates of each plausible value.
 #' @param df a logical value indicating if degrees should be calculated.
+#' @param n a numeric value indicating the sample size.
+#' @param k a numeric value indicating the number of estimated parameters.
+#' @param barnardrubin a logical value indicating if Barnard & Rubin adjustment
+#' should be used for estimating the degrees of freedom. Default is \code{TRUE}.
 #'
 #'
 #' @return the standard error.
@@ -122,14 +126,7 @@ repse <- function(er,e0,
 
 
 
-  if(!is.null(setup)){
-    # if(setup$repwt.type!="df"){repwt <- setup$repwt}else{repwt <- get(setup$repwt)}
-    # wt <- setup$wt
-    method <- setup$method
-    # group <- setup$group
-    # exclude <- setup$exclude
-    # df <- get(setup$df)
-  }
+  assignsetup(repse,setup = setup,mc = match.call())
 
 
   returnis(ischavec, method)
@@ -351,10 +348,10 @@ sqrt(sum(se**2)/length(se)**2)
 #' @rdname repse
 #' @export
 #'
-pvse <- function(PVse,PVe0,df = FALSE){
+pvse <- function(PVse,PVe0,df = FALSE, n = NULL, k = NULL, barnardrubin = TRUE){
 
   if(df)
-    return(.pvsedf(PVse,PVe0))
+    return(.pvsedf(PVse,PVe0,n = n, k=k, barnardrubin=barnardrubin))
 
   return(.pvse(PVse,PVe0))
 
@@ -370,7 +367,21 @@ pvse <- function(PVse,PVe0,df = FALSE){
 
 }
 
-.pvsedf <- function(PVse,PVe0){
+# .pvsedf <- function(PVse,PVe0){
+#
+#   m <- length(PVe0)
+#   B <- stats::var(PVe0)
+#   Ubar <- mean(PVse**2,na.rm = TRUE)
+#
+#   eee = 1+m*Ubar/((m+1)*B)
+#   eee = (m-1)*(eee)**2
+#
+#   c(sqrt(Ubar + (1+1/m)*B),(m-1)*(1+(m*Ubar)/((m+1)*B))**2)
+#
+# }
+
+
+.pvsedf <- function(PVse, PVe0, n = NULL, k = NULL, barnardrubin = TRUE){
 
   m <- length(PVe0)
   B <- stats::var(PVe0)
@@ -379,10 +390,18 @@ pvse <- function(PVse,PVe0,df = FALSE){
   eee = 1+m*Ubar/((m+1)*B)
   eee = (m-1)*(eee)**2
 
-  c(sqrt(Ubar + (1+1/m)*B),(m-1)*(1+(m*Ubar)/((m+1)*B))**2)
+  vold <- (m - 1) * (1 + (m * Ubar)/((m + 1) * B))^2
+  SE <- sqrt(Ubar + (1 + 1/m) * B)
+
+  if(!barnardrubin)
+    return(c(SE, vold))
+
+  lambda <- (1+1/m)*B/(Ubar+(1+1/m)*B)
+  vobs <- (n-k+1)*(n-k)*(1-lambda)/(n-k+3)
+  return(c(SE, (vold*vobs)/(vold+vobs)))
+
 
 }
-
 
 
 

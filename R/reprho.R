@@ -46,19 +46,16 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
   frm <- formals(reprho)
 
 
-  if(!is.null(setup)){
-    if(setup$repwt.type!="df"){repwt <- setup$repwt}else{repwt <- get(setup$repwt)}
-    wt <- setup$wt
-    method <- setup$method
-    group <- setup$group
-    exclude <- setup$exclude
-    df <- get(setup$df)
-  }
+  assignsetup(reprho,setup = setup,mc = match.call())
 
 
   returnis(ischavec, method)
   method <- returnis(isinvec,x = method[1L],choices = ILSAmethods(repse = TRUE))
-  aggregates <- returnisNULL(isinvecmul,x = aggregates, choices = frm$aggregates)
+
+  if(!is.null(aggregates)){
+    aggregates <- returnisNULL(isinvecmul,x = aggregates, choices = frm$aggregates)
+  }
+
 
 
   # Checks -----
@@ -409,7 +406,11 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
 
   })
 
+
+  class(out) <- c("reprho", class(out))
+
   out
+
 
 
 
@@ -798,4 +799,19 @@ reprho <- function(x = NULL,pv = NULL, pv2 = NULL,relatedpvs = TRUE,
 
 }
 
+
+#' @export
+print.reprho <- function(x, ...){
+
+  dec = 5
+
+  class(x) <- setdiff(class(x),c("reprho"))
+
+
+    print(maxdec(x, dec = dec))
+
+
+
+
+}
 

@@ -2,17 +2,15 @@
 #'
 #' Estimates the mean score for all countries within a cycle of an ILSA.
 #' Arguments \code{method}, \code{reps}, and \code{var}, are extracted from
-#' \code{\link{ILSAinfo}} and can be overridden by the user.
+#' \code{\link{autoILSA}} and can be overridden by the user.
 #'
 #' @param study an optional character vector indicating the ILSA name, for a list of available
-#'  ILSA, check \code{\link{ILSAinfo}}. If \code{NULL}, the ILSA name will be determined
+#'  ILSA, check \code{\link{autoILSA}}. If \code{NULL}, the ILSA name will be determined
 #'  by the column names in the data frame.
 #' @param year a numeric vector indicating the ILSA name, for a list of available
-#'  cycles, check \code{\link{ILSAinfo}}.
-#' @param study an optional character vector indicating the subjects to be analyzed, for a list of available
-#'  subjects, check \code{\link{ILSAinfo}}.
+#'  cycles, check \code{\link{autoILSA}}.
 #' @param subject an optional character vector indicating the subject for a list of available
-#'  ILSA, check \code{\link{ILSAinfo}}.
+#'  ILSA, check \code{\link{autoILSA}}.
 #' @param fixN a logical value indicating if data should be "fixed" to meet official criteria.
 #' For example, reducing the sample for certain countries in TIMSS 1995. Default is \code{TRUE}.
 #' @param addCI a logical value indicating if confidence intervals should be added.
@@ -83,7 +81,7 @@ leaguetable <- function(df,
   ilic <- lapply(1:nrow(ili), function(i){
     omitna(as.vector(unlist(lapply(ili[i,c("country","pvs","jkzones","jkreps",
                                            "totalweight","extravars")],
-                                           strsplit,split = ";"))))
+                                   strsplit,split = ";"))))
   })
 
   ili <- ili[sapply(ilic,function(i){all(i%in%cdf)}),]
@@ -177,7 +175,7 @@ leaguetable <- function(df,
 
 
 
-# Fixdata -----------------------------------------------------------------
+  # Fixdata -----------------------------------------------------------------
 
 
 
@@ -210,12 +208,12 @@ leaguetable <- function(df,
                cou)
 
   # if(fixdata){
-    df <- .fixdata(df = df,
-                   study = ili$study[1],
-                   year = ili$year[1],
-                   specification = ili$study2[1],
-                   columns = kolumns,
-                   fixN = fixN)
+  df <- .fixdata(df = df,
+                 study = ili$study[1],
+                 year = ili$year[1],
+                 specification = ili$study2[1],
+                 columns = kolumns,
+                 fixN = fixN)
   # }
 
 
@@ -230,7 +228,7 @@ leaguetable <- function(df,
                    wt = ili$totalweight[1],
                    repwtname = "rwi",
                    reps = reps,
-                   method = method)
+                   method = method,index = TRUE)
 
 
   xx <- strsplit(ili$pvs,";")
@@ -238,19 +236,18 @@ leaguetable <- function(df,
 
   out <- vector("list",length(xx))
   for(i in 1:length(xx)){
-    meai <- .repmean0(df = df,
-                    x = xx[[i]],
-                    PV = (length(xx[[i]])>1),
-                    # setup = NULL,
-                    repwt = rwi,
-                    wt = ili$totalweight[i],
-                    method = method,
-                    var = -1,
-                    group = cou,
-                    by = NULL,
-                    exclude = NULL,
-                    aggregates = NULL,
-                    zones = NULL)
+    meai <- repmeanfast(x = xx[[i]],
+                        PV = (length(xx[[i]])>1),
+                        setup = NULL,
+                        repindex = rwi,
+                        wt = ili$totalweight[i],
+                        df = df,
+                        group = cou,
+                        method = method,
+                        var = "none",
+                        exclude = NULL,
+                        aggregates = NULL)
+
     if(addCI){
       meai <- repmeanCI(x = meai, alpha = alpha, add = TRUE)
     }
@@ -273,9 +270,34 @@ leaguetable <- function(df,
 
   # Output ------------------------------------------------------------------
 
-  do.call(rbind,out)
+  out <- do.call(rbind,out)
+  class(out) <- c("leaguetable",class(out))
+
+  return(out)
 
 }
 
 
+#' @export
+print.leaguetable <- function(x, ...){
 
+  dec = 5
+
+  class(x) <- setdiff(class(x),c("leaguetable"))
+
+  if(inherits(x,"list")){
+
+
+    print(    lapply(x,function(i){
+
+      maxdec(i, dec = dec)
+
+    }))
+
+  }else{
+    print(maxdec(x, dec = dec))
+  }
+
+
+
+}

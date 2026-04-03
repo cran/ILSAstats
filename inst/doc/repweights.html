@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Replicate weights</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Replicate weights</h1>
+
+
+
+<p>Depending on our data, it may contain or not replicate weights. If it
+does not, we need to create them. For this we will need variables
+containing the jackknife zones, the jackknife replications, and the
+total weights. Normally, all this information is provided within the
+data.</p>
+<p>For example, using the data <code>timss99</code>, we can find the
+variables <code>&quot;JKZONE&quot;</code>, <code>&quot;JKREP&quot;</code>, and
+<code>&quot;TOTWGT&quot;</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">colnames</span>(repdata)</span></code></pre></div>
+<pre><code>##  [1] &quot;GROUP&quot;       &quot;ID&quot;          &quot;GENDER&quot;      &quot;SES&quot;         &quot;schoolSES&quot;  
+##  [6] &quot;item01&quot;      &quot;item02&quot;      &quot;item03&quot;      &quot;item04&quot;      &quot;item05&quot;     
+## [11] &quot;item06&quot;      &quot;item07&quot;      &quot;item08&quot;      &quot;item09&quot;      &quot;item10&quot;     
+## [16] &quot;item11&quot;      &quot;item12&quot;      &quot;item13&quot;      &quot;item14&quot;      &quot;item15&quot;     
+## [21] &quot;item16&quot;      &quot;item17&quot;      &quot;item18&quot;      &quot;item19&quot;      &quot;item20&quot;     
+## [26] &quot;item21&quot;      &quot;item22&quot;      &quot;item23&quot;      &quot;item24&quot;      &quot;item25&quot;     
+## [31] &quot;Math1&quot;       &quot;Math2&quot;       &quot;Math3&quot;       &quot;Math4&quot;       &quot;Math5&quot;      
+## [36] &quot;Reading1&quot;    &quot;Reading2&quot;    &quot;Reading3&quot;    &quot;Reading4&quot;    &quot;Reading5&quot;   
+## [41] &quot;CatMath1&quot;    &quot;CatMath2&quot;    &quot;CatMath3&quot;    &quot;CatMath4&quot;    &quot;CatMath5&quot;   
+## [46] &quot;CatReading1&quot; &quot;CatReading2&quot; &quot;CatReading3&quot; &quot;CatReading4&quot; &quot;CatReading5&quot;
+## [51] &quot;wt&quot;          &quot;jkzones&quot;     &quot;jkrep&quot;</code></pre>
+<p>Now, we would need also to select some options for the creation of
+the replicate weights: a) we need to establish the number of
+replications; and b) we need to decide which method we are going to
+use.</p>
+<p>For the number of replications, we use the argument
+<code>reps</code>, that is <code>NULL</code> by default (we recommend
+using this option). If left <code>NULL</code>, the number of
+replications will be determined using the <code>&quot;jkrep&quot;</code> variable.
+Nevertheless, we can adjust this if needed.</p>
+<div id="method" class="section level2">
+<h2>Method</h2>
+<p>More importantly, we need to decide on the method. All methods are
+available for all ILSAs, so you are able to use the official one or
+experiment with other. For creating replicate weights, 4 methods are
+implemented, you can use the method name or the ILSA names:</p>
+<ul>
+<li><code>&quot;JK-full&quot;</code>, corresponds to <code>&quot;TIMSS&quot;</code>,
+<code>&quot;PIRLS&quot;</code> and <code>&quot;LANA&quot;</code>.</li>
+<li><code>&quot;JK-half&quot;</code>, corresponds to <code>&quot;ICILS&quot;</code>,
+<code>&quot;ICCS&quot;</code>, and <code>&quot;CIVED&quot;</code>.</li>
+<li><code>&quot;JK2-half-1PV&quot;</code>, corresponds to <code>&quot;oldTIMSS&quot;</code>,
+<code>&quot;oldPIRLS&quot;</code>, and <code>&quot;RLII&quot;</code> (for TIMSS and PIRLS
+conducted before 2015).</li>
+<li><code>&quot;FAY-0.5&quot;</code>, corresponds to <code>&quot;PISA&quot;</code> and
+<code>&quot;TALIS&quot;</code>.</li>
+</ul>
+<p>Our data corresponds to TIMSS 1999, so we are advised to use either
+the old method of TIMSS to replicate results (<code>&quot;oldTIMSS&quot;</code>),
+or the new method of TIMSS to compare it to new results
+(<code>&quot;TIMSS&quot;</code>).</p>
+</div>
+<div id="creation-of-weights" class="section level2">
+<h2>Creation of weights</h2>
+<p>So, now knowing our options we can use <code>timss99</code> data and
+<code>repcreate()</code> for creating the replicate weights:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>RW1 <span class="ot">&lt;-</span> <span class="fu">repcreate</span>(<span class="at">df =</span> timss99,</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                <span class="at">jkzone =</span> <span class="st">&quot;JKZONE&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                <span class="at">jkrep =</span> <span class="st">&quot;JKREP&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                <span class="at">wt =</span> <span class="st">&quot;TOTWGT&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;oldTIMSS&quot;</span>)</span></code></pre></div>
+<p>We can see that this new object is a data frame with 75 columns
+(representing the 75 replications):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">class</span>(RW1)</span></code></pre></div>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">ncol</span>(RW1)</span></code></pre></div>
+<pre><code>## [1] 75</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">colnames</span>(RW1))</span></code></pre></div>
+<pre><code>## [1] &quot;RWT1&quot; &quot;RWT2&quot; &quot;RWT3&quot; &quot;RWT4&quot; &quot;RWT5&quot; &quot;RWT6&quot;</code></pre>
+</div>
+<div id="automatic-creation-of-weights" class="section level2">
+<h2>Automatic creation of weights</h2>
+<p>Some ILSA information are already included in <code>ILSAstats</code>,
+so if our data corresponds to any of the included ones, we can create
+the replicate weights easier, using <code>repcreateILSA()</code>. To
+check which ILSA information is included we can use
+<code>ILSAinfo$weights</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>ILSAinfo<span class="sc">$</span>weights</span></code></pre></div>
+<pre><code>##            study  study2 year   method country jkzones jkreps reps totalweight
+## 1          ICILS       - 2013    ICILS   CNTRY JKZONES JKREPS   75     TOTWGTS
+## 2          ICILS       - 2018    ICILS   CNTRY JKZONES JKREPS   75     TOTWGTS
+## 3          ICILS       - 2023    ICILS   CNTRY JKZONES JKREPS   75     TOTWGTS
+## 4           ICCS      G8 2009    ICILS COUNTRY JKZONES JKREPS   75     TOTWGTS
+## 5           ICCS      G9 2009    ICILS COUNTRY JKZONES JKREPS   75     TOTWGTS
+## 6           ICCS       - 2016    ICILS COUNTRY JKZONES JKREPS   75     TOTWGTS
+## 7           ICCS       - 2022    ICILS COUNTRY JKZONES JKREPS   75     TOTWGTS
+## 8          CIVED      G8 1999    CIVED IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 9          CIVED     G12 1999    CIVED IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 10          RLII       - 1991     RLII IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 11          RLII       - 2001     RLII IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 12         TIMSS      G4 1995 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 13         TIMSS      G8 1995 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 14         TIMSS      G8 1999 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 15         TIMSS      G4 2003 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 16         TIMSS      G8 2003 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 17         TIMSS      G4 2007 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 18         TIMSS      G8 2007 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 19         TIMSS      G4 2011 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 20         TIMSS      G8 2011 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 21         TIMSS      G4 2015    TIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 22         TIMSS      G8 2015    TIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 23         TIMSS      G4 2019    TIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 24         TIMSS      G8 2019    TIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 25         TIMSS      G4 2023    TIMSS IDCNTRY  JKZONE  JKREP  125      TOTWGT
+## 26         TIMSS      G8 2023    TIMSS IDCNTRY  JKZONE  JKREP  125      TOTWGT
+## 27 TIMSSADVANCED    math 1995 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 28 TIMSSADVANCED    math 2008 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 29 TIMSSADVANCED    math 2015    TIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 30 TIMSSADVANCED physics 1995 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 31 TIMSSADVANCED physics 2008 oldTIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 32 TIMSSADVANCED physics 2015    TIMSS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 33         PIRLS       - 2001 oldPIRLS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 34         PIRLS       - 2006 oldPIRLS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 35         PIRLS       - 2011 oldPIRLS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 36         PIRLS       - 2016    PIRLS IDCNTRY  JKZONE  JKREP   75      TOTWGT
+## 37         PIRLS       - 2021    PIRLS IDCNTRY  JKZONE  JKREP  125      TOTWGT
+## 38          LANA       - 2023     LANA IDCNTRY  JKZONE  JKREP  125      TOTWGT
+## 39     TIMSSLONG     G89 2023    TIMSS IDCNTRY  JKZONE  JKREP  125      TOTWGT
+## 40     TIMSSLONG     G45 2023    TIMSS IDCNTRY  JKZONE  JKREP  125      TOTWGT</code></pre>
+<p>So this information already contains the name of the method, the
+jackknife zones, the jackknife replications, and the total weights from
+a total of 40 cycles.</p>
+<p>So, for our TIMSS 1999 case, we would need to specify the name of the
+study, the cycle and the data:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>RW2 <span class="ot">&lt;-</span> <span class="fu">repcreateILSA</span>(<span class="at">study =</span> <span class="st">&quot;TIMSS&quot;</span>,<span class="at">year =</span> <span class="dv">1999</span>,<span class="at">df =</span> timss99)</span></code></pre></div>
+<p>This will produce the same results as <code>RW1</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">identical</span>(RW1,RW2)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

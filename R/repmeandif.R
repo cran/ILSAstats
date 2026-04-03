@@ -6,7 +6,8 @@
 #' see \code{\link{repse}}.
 #'
 #'
-#' @param x a data frame produced by \code{\link{repmean}} for a single variable.
+#' @param x a data frame produced by \code{\link{repmean}} for a single variable
+#' or an object produced by \code{\link{leaguetable}}.
 #'
 #'
 #' @return a data frame or a list.
@@ -18,6 +19,13 @@
 
 repmeandif <- function(x){
 
+  if(inherits(x,"leaguetable")){
+
+    return(.repmeandifLT(x))
+
+  }
+
+
   returnis(isrep.mean,x)
 
 
@@ -28,9 +36,13 @@ repmeandif <- function(x){
 
 
   # message("dfs and pvalues are experimental.")
-  lapply(x,function(i){
+  out <- lapply(x,function(i){
     .repmeandif(i)
   })
+
+  class(out) <- c("repmeandif.list","repmeandif",class(out))
+
+  out
 
 
 
@@ -165,3 +177,67 @@ repmeandif <- function(x){
 }
 
 
+.repmeandifLT <- function(x){
+
+  xx <- split(x,f=x$subject)
+
+  xx <- do.call(rbind,lapply(xx,function(i){
+    x1 <- unique(i[,setdiff(colnames(x),c("group","mean","se","N","CIup","CIdown"))])
+    x2 <- i[,c("group","N","mean","se")]
+
+    class(x2) <- c("repmean.single","repmean","data.frame")
+    sw(cbind(x1,repmeandif(x2)))
+  })
+  )
+  rownames(xx) <- NULL
+  class(xx) <- c("repmeandif",class(xx))
+
+  xx
+
+}
+
+
+
+# .LTdif <- function(x){
+#   spl <- split(x,f = x$subject)
+#
+#   out <- do.call(rbind,lapply(spl,function(i){
+#
+#     i2 <- i[,-(1:4)]
+#     class(i2) <- c("repmean.single","repmean","data.frame")
+#
+#     sw(cbind.data.frame(i[,1:4],.repmeandif(i2)))
+#
+#
+#   }))
+#   rownames(out) <- NULL
+#
+#   class(out) <- c("repmeandif", class(out))
+#
+#   out
+# }
+
+
+#' @export
+print.repmeandif <- function(x, ...){
+
+  dec = 5
+
+  class(x) <- setdiff(class(x),c("repmeandif","repmeandif.list"))
+
+  if(inherits(x,"list")){
+
+
+    print(    lapply(x,function(i){
+
+      maxdec(i, dec = dec)
+
+    }))
+
+  }else{
+    print(maxdec(x, dec = dec))
+  }
+
+
+
+}

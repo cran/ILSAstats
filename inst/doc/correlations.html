@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Correlations</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Correlations</h1>
+
+
+
+<p>We can estimate the correlations for any pair of variables using the
+function <code>reprho()</code>, as any other “rep” function of
+<code>ILSAstats</code>, we need to specify the data (<code>df</code>),
+the total weights (<code>wt</code>), the replicate weights
+(<code>repwt</code>), and the method (<code>method</code>).</p>
+<p>Besides these basic options, other arguments can be used:</p>
+<ul>
+<li><code>x</code>: a string with the name of the variable (or
+variables) to be used in the analysis.</li>
+<li><code>pv</code>: a string containing the name of plausible value
+variables related to a construct.</li>
+<li><code>pv2</code>: a string containing the name of plausible value
+variables related to <strong>another</strong> construct (diferente from
+the one in <code>pv</code>).</li>
+<li><code>relatedpvs</code>: a logical value indicating if when using
+two plausible value constructs, there should be related or not. If
+<code>TRUE</code> correlations between plausible values will be
+estimated in pairs (1 with 1, 2 with 2, etc.). If <code>FALSE</code>
+correlations will be estimated using all posible combination between
+both plausible value variables.</li>
+<li><code>rho</code>: a string indicating the correlation coefficient to
+be computed, options are <code>&quot;pearson&quot;</code> (the default),
+<code>&quot;spearman&quot;</code>, and <code>&quot;polychoric&quot;</code>.</li>
+<li><code>group</code>: a string containing the name of the variable
+that contains the groups of countries. If used all statistics will be
+estimated separately for each group, and groups will be treated as
+<strong>independent</strong> from each other, e.g., countries.</li>
+<li><code>exclude</code>: a string containing which groups should be
+excluded from aggregate estimations.</li>
+<li><code>aggregates</code>: a string containing the aggregate
+statistics that should be estimated. Options include:
+<code>&quot;pooled&quot;</code> for also estimating all groups (without
+exclusions) as a single group; and <code>&quot;composite&quot;</code> for
+averaging all the estimations for each single group (without
+exclusions).</li>
+</ul>
+<div id="weights-and-setup" class="section level2">
+<h2>Weights and setup</h2>
+<p>For <code>reprho()</code>, first we need to create the replicate
+weights. Using the included <code>repdata</code> data, and using the
+<code>&quot;LANA&quot;</code> method:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>RW <span class="ot">&lt;-</span> <span class="fu">repcreate</span>(<span class="at">df =</span> repdata,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                <span class="at">jkzone =</span> <span class="st">&quot;jkzones&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                <span class="at">jkrep =</span> <span class="st">&quot;jkrep&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>)</span></code></pre></div>
+<p>To make it easier to specify some arguments, it is advised that we
+create also a <code>&quot;repsetup&quot;</code> object. We will create three
+setups for this example: one without groups, one with groups and without
+exclusions, and one with groups and exclusions (excluding group 2):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># No groups</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>STNG <span class="ot">&lt;-</span> <span class="fu">repsetup</span>(<span class="at">repwt =</span> RW, <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>, <span class="at">df =</span> repdata, <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># With groups</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>STGR <span class="ot">&lt;-</span> <span class="fu">repsetup</span>(<span class="at">repwt =</span> RW, <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>, <span class="at">df =</span> repdata, <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>                 <span class="at">group =</span> <span class="st">&quot;GROUP&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># With groups and exclusions</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>STGE <span class="ot">&lt;-</span> <span class="fu">repsetup</span>(<span class="at">repwt =</span> RW, <span class="at">wt =</span> <span class="st">&quot;wt&quot;</span>, <span class="at">df =</span> repdata, <span class="at">method =</span> <span class="st">&quot;LANA&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>                 <span class="at">group =</span> <span class="st">&quot;GROUP&quot;</span>, <span class="at">exclude =</span> <span class="st">&quot;GR2&quot;</span>)</span></code></pre></div>
+</div>
+<div id="two-non-pv-variables" class="section level2">
+<h2>Two non-PV variables</h2>
+<p>For example, if we want to estimate the correlation between
+<code>&quot;item01&quot;</code> and <code>&quot;SES&quot;</code>, we can use either of the
+setups to get the overall or group results (notice that if we do not
+specify the type of correlation it will default to
+<code>&quot;pearson&quot;</code>):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># No groups</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;SES&quot;</span>,<span class="st">&quot;item01&quot;</span>), <span class="at">setup =</span> STNG)</span></code></pre></div>
+<pre><code>## More than one correlation method provided. Only first method will be used (pearson).</code></pre>
+<pre><code>##   variable1 variable2      rho      se    n   tvalue  pvalue
+## 1       SES    item01 -0.03101 0.01495 4483 -2.07395 0.03814</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># With groups</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;item01&quot;</span>,<span class="st">&quot;SES&quot;</span>,<span class="st">&quot;item01&quot;</span>), <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##    variable1 variable2     group      rho      se    n        tvalue  pvalue
+## 1     item01       SES    Pooled -0.03101 0.01495 4483 -2.073950e+00 0.03814
+## 2     item01       SES Composite -0.02555 0.01444   NA -1.769220e+00      NA
+## 3     item01       SES       GR1  0.01100 0.02541 1507  4.326500e-01 0.66533
+## 4     item01       SES       GR2 -0.01740 0.02759 1491 -6.305000e-01 0.52847
+## 5     item01       SES       GR3 -0.07026 0.02169 1485 -3.239700e+00 0.00122
+## 6     item01    item01    Pooled  1.00000 0.00000 4483  1.335316e+15 0.00000
+## 7     item01    item01 Composite  1.00000 0.00000   NA  1.860244e+15      NA
+## 8     item01    item01       GR1  1.00000 0.00000 1507  1.158009e+15 0.00000
+## 9     item01    item01       GR2  1.00000 0.00000 1491  8.667182e+14 0.00000
+## 10    item01    item01       GR3  1.00000 0.00000 1485  1.381641e+15 0.00000
+## 11       SES    item01    Pooled -0.03101 0.01495 4483 -2.073950e+00 0.03814
+## 12       SES    item01 Composite -0.02555 0.01444   NA -1.769220e+00      NA
+## 13       SES    item01       GR1  0.01100 0.02541 1507  4.326500e-01 0.66533
+## 14       SES    item01       GR2 -0.01740 0.02759 1491 -6.305000e-01 0.52847
+## 15       SES    item01       GR3 -0.07026 0.02169 1485 -3.239700e+00 0.00122</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># With groups and exclusions</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;SES&quot;</span>,<span class="st">&quot;item01&quot;</span>), <span class="at">setup =</span> STGE, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##   variable1 variable2     group      rho      se    n   tvalue  pvalue
+## 1       SES    item01    Pooled -0.03800 0.01641 2992 -2.31519 0.02067
+## 2       SES    item01 Composite -0.02963 0.01670   NA -1.77390      NA
+## 3       SES    item01       GR1  0.01100 0.02541 1507  0.43265 0.66533
+## 4       SES    item01       GR2 -0.01740 0.02759 1491 -0.63050 0.52847
+## 5       SES    item01       GR3 -0.07026 0.02169 1485 -3.23970 0.00122</code></pre>
+<p>We can notice that using no groups we would get the same results for
+the pooled estimates if we use groups and no exclusions. But, when we
+exclude group 2, the pooled and the composite estimate changes.</p>
+</div>
+<div id="correlation-methods" class="section level2">
+<h2>Correlation methods</h2>
+<p>Besides the Pearson correlation, also the Spearman correlation and
+polychoric correlation can be obtained, for this we use the
+<code>rho</code> argument:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Pearson</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;item02&quot;</span>,<span class="st">&quot;item01&quot;</span>), <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##   variable1 variable2     group     rho      se    n   tvalue pvalue
+## 1    item02    item01    Pooled 0.55841 0.01523 4029 36.65308      0
+## 2    item02    item01 Composite 0.55884 0.01519   NA 36.79579     NA
+## 3    item02    item01       GR1 0.55507 0.02625 1344 21.14770      0
+## 4    item02    item01       GR2 0.54681 0.02690 1336 20.32532      0
+## 5    item02    item01       GR3 0.57464 0.02575 1349 22.31239      0</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Spearman</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;item02&quot;</span>,<span class="st">&quot;item01&quot;</span>), <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
+<pre><code>##   variable1 variable2     group     rho      se    n   tvalue pvalue
+## 1    item02    item01    Pooled 0.60639 0.01121 4029 54.10745      0
+## 2    item02    item01 Composite 0.60613 0.01127   NA 53.79030     NA
+## 3    item02    item01       GR1 0.59916 0.01765 1344 33.93823      0
+## 4    item02    item01       GR2 0.60349 0.02162 1336 27.91022      0
+## 5    item02    item01       GR3 0.61574 0.01907 1349 32.29232      0</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Polychoric</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;item02&quot;</span>,<span class="st">&quot;item01&quot;</span>), <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;polychoric&quot;</span>)</span></code></pre></div>
+<pre><code>##   variable1 variable2     group     rho      se    n   tvalue pvalue
+## 1    item02    item01    Pooled 0.70979 0.01237 4029 57.40152      0
+## 2    item02    item01 Composite 0.71015 0.01261   NA 56.31031     NA
+## 3    item02    item01       GR1 0.70916 0.02066 1344 34.31764      0
+## 4    item02    item01       GR2 0.70233 0.02233 1336 31.45694      0
+## 5    item02    item01       GR3 0.71897 0.02249 1349 31.96448      0</code></pre>
+<p>We can notice that using no groups we would get the same results for
+the pooled estimates if we use groups and no exclusions. But, when we
+exclude group 2, the pooled and the composite estimate changes.</p>
+</div>
+<div id="multiple-non-pv-variables" class="section level2">
+<h2>Multiple non-PV variables</h2>
+<p>We can also estimate correlations between more than two
+variables:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;SES&quot;</span>,<span class="st">&quot;item01&quot;</span>,<span class="st">&quot;item02&quot;</span>), <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##    variable1 variable2     group      rho      se    n   tvalue  pvalue
+## 1        SES    item01    Pooled -0.03101 0.01495 4483 -2.07395 0.03814
+## 2        SES    item01 Composite -0.02555 0.01444   NA -1.76922      NA
+## 3        SES    item01       GR1  0.01100 0.02541 1507  0.43265 0.66533
+## 4        SES    item01       GR2 -0.01740 0.02759 1491 -0.63050 0.52847
+## 5        SES    item01       GR3 -0.07026 0.02169 1485 -3.23970 0.00122
+## 6        SES    item02    Pooled -0.02674 0.01481 4501 -1.80551 0.07106
+## 7        SES    item02 Composite -0.01879 0.01408   NA -1.33494      NA
+## 8        SES    item02       GR1  0.01774 0.02317 1496  0.76558 0.44405
+## 9        SES    item02       GR2 -0.00231 0.02877 1494 -0.08025 0.93605
+## 10       SES    item02       GR3 -0.07181 0.02046 1511 -3.50960 0.00046
+## 11    item01    item02    Pooled  0.55841 0.01523 4029 36.65308 0.00000
+## 12    item01    item02 Composite  0.55884 0.01519   NA 36.79579      NA
+## 13    item01    item02       GR1  0.55507 0.02625 1344 21.14770 0.00000
+## 14    item01    item02       GR2  0.54681 0.02690 1336 20.32532 0.00000
+## 15    item01    item02       GR3  0.57464 0.02575 1349 22.31239 0.00000</code></pre>
+</div>
+<div id="one-pv-variable" class="section level2">
+<h2>One PV variable</h2>
+<p>To estimate the correlations between a non plausible value variables
+and a plausible value variable we need to state the normal variables in
+<code>x</code> and plausible values variables in argument
+<code>pv</code>:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># One variable</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;SES&quot;</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>       <span class="at">pv =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##   variable1 variable2     group     rho      se    n  tvalue  pvalue
+## 1       SES       PVs    Pooled 0.37372 0.05132 5000 7.28203 0.00000
+## 2       SES       PVs Composite 0.24538 0.03991   NA 6.14846      NA
+## 3       SES       PVs       GR1 0.27224 0.07236 1667 3.76237 0.00017
+## 4       SES       PVs       GR2 0.21660 0.06682 1666 3.24165 0.00121
+## 5       SES       PVs       GR3 0.24730 0.06808 1667 3.63272 0.00029</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co"># More than one variable</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;SES&quot;</span>,<span class="st">&quot;item01&quot;</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>       <span class="at">pv =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##    variable1 variable2     group      rho      se    n   tvalue  pvalue
+## 1        SES       PVs    Pooled  0.37372 0.05132 5000  7.28203 0.00000
+## 2        SES       PVs Composite  0.24538 0.03991   NA  6.14846      NA
+## 3        SES       PVs       GR1  0.27224 0.07236 1667  3.76237 0.00017
+## 4        SES       PVs       GR2  0.21660 0.06682 1666  3.24165 0.00121
+## 5        SES       PVs       GR3  0.24730 0.06808 1667  3.63272 0.00029
+## 6     item01       PVs    Pooled -0.01759 0.01840 4483 -0.95618 0.33903
+## 7     item01       PVs Composite -0.00954 0.01742   NA -0.54757      NA
+## 8     item01       PVs       GR1 -0.01989 0.03014 1507 -0.66008 0.50931
+## 9     item01       PVs       GR2 -0.00214 0.03088 1491 -0.06918 0.94485
+## 10    item01       PVs       GR3 -0.00659 0.02948 1485 -0.22340 0.82325</code></pre>
+</div>
+<div id="multiple-pv-variables" class="section level2">
+<h2>Multiple PV variables</h2>
+<p>It is also possible to correlate two plausible value variables using
+argument <code>pv</code> and <code>pv2</code>, when doing so
+<code>x</code> should be <code>NULL</code>. For example, to correlate
+math and reading achievement in <code>repdata</code>:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">pv =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>       <span class="at">pv2 =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Reading&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##       group      rho      se    n   tvalue  pvalue
+## 1    Pooled  0.14209 0.03848 5000  3.69259 0.00022
+## 2 Composite -0.14197 0.03827   NA -3.70955      NA
+## 3       GR1 -0.07250 0.06419 1667 -1.12932 0.25893
+## 4       GR2 -0.22991 0.07829 1666 -2.93673 0.00336
+## 5       GR3 -0.12351 0.05416 1667 -2.28063 0.02270</code></pre>
+<p>Please notice that by default <code>reprho()</code> assumes that both
+plausible value variables are related and correlates the first plausible
+value of each variable, then the seconde one of each and so on. For our
+example it will estimate 5 correlations (Math1-Reading1, Math2-Reading2,
+Math3-Reading3, Math4-Reading4, and Math5-Reading5) and average
+them.</p>
+<p>Nevertheless, it is also possible to calculate de correlation between
+no related plausible values, therefore instead of 5 estimations,
+<code>reprho()</code> will make 25 estimations, with all the possible
+combinations between math and reading. For doing that, we can use the
+argument <code>relatedpvs=FALSE</code>:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">pv =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>       <span class="at">pv2 =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Reading&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>       <span class="at">relatedpvs =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##       group      rho      se    n   tvalue  pvalue
+## 1    Pooled  0.15895 0.03956 5000  4.01755 0.00006
+## 2 Composite -0.11932 0.03486   NA -3.42305      NA
+## 3       GR1 -0.04893 0.06081 1667 -0.80465 0.42114
+## 4       GR2 -0.20752 0.06326 1666 -3.28045 0.00106
+## 5       GR3 -0.10153 0.05689 1667 -1.78448 0.07453</code></pre>
+</div>
+<div id="aggregates" class="section level2">
+<h2>Aggregates</h2>
+<p>When using groups we can always omit the pooled and composite
+calculations if we need to, by default both estimates will be
+calculated.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># Default</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">pv =</span> <span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>       <span class="at">pv2 =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Reading&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)), </span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>##       group      rho      se    n   tvalue  pvalue
+## 1    Pooled  0.14209 0.03848 5000  3.69259 0.00022
+## 2 Composite -0.14197 0.03827   NA -3.70955      NA
+## 3       GR1 -0.07250 0.06419 1667 -1.12932 0.25893
+## 4       GR2 -0.22991 0.07829 1666 -2.93673 0.00336
+## 5       GR3 -0.12351 0.05416 1667 -2.28063 0.02270</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># Only pooled</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">pv =</span> <span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>       <span class="at">pv2 =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Reading&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)), </span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>       <span class="at">aggregates =</span> <span class="st">&quot;pooled&quot;</span>)</span></code></pre></div>
+<pre><code>##    group      rho      se    n   tvalue  pvalue
+## 1 Pooled  0.14209 0.03848 5000  3.69259 0.00022
+## 2    GR1 -0.07250 0.06419 1667 -1.12932 0.25893
+## 3    GR2 -0.22991 0.07829 1666 -2.93673 0.00336
+## 4    GR3 -0.12351 0.05416 1667 -2.28063 0.02270</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co"># Only composite</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">pv =</span> <span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>       <span class="at">pv2 =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Reading&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)), </span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>       <span class="at">aggregates =</span> <span class="st">&quot;composite&quot;</span>)</span></code></pre></div>
+<pre><code>##       group      rho      se    n   tvalue  pvalue
+## 1 Composite -0.14197 0.03827   NA -3.70955      NA
+## 2       GR1 -0.07250 0.06419 1667 -1.12932 0.25893
+## 3       GR2 -0.22991 0.07829 1666 -2.93673 0.00336
+## 4       GR3 -0.12351 0.05416 1667 -2.28063 0.02270</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="co"># No aggregates</span></span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a><span class="fu">reprho</span>(<span class="at">pv =</span> <span class="fu">paste0</span>(<span class="st">&quot;Math&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a>       <span class="at">pv2 =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;Reading&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)), </span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a>       <span class="at">setup =</span> STGR, <span class="at">rho =</span> <span class="st">&quot;pearson&quot;</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>       <span class="at">aggregates =</span> <span class="cn">NULL</span>)</span></code></pre></div>
+<pre><code>##   group      rho      se    n   tvalue  pvalue
+## 1   GR1 -0.07250 0.06419 1667 -1.12932 0.25893
+## 2   GR2 -0.22991 0.07829 1666 -2.93673 0.00336
+## 3   GR3 -0.12351 0.05416 1667 -2.28063 0.02270</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
